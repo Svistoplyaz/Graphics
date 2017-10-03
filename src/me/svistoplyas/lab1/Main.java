@@ -16,15 +16,18 @@ public class Main {
 
         int n = in.nextInt();
         for(int i = 0; i < n; i++){
-            frame.addPoint(new Point(in.nextInt(),in.nextInt(),in.nextInt()));
+            frame.addPoint(new Point(in.nextInt(),-in.nextInt(),-in.nextInt()));
         }
 
         int m = in.nextInt();
+        int[][] edges = new int[m][2];
         for(int i = 0; i < m; i++){
-            frame.addEdge(new Edge(frame.getPoint(in.nextInt()),frame.getPoint(in.nextInt())));
+            edges[i][0] = in.nextInt();
+            edges[i][1] = in.nextInt();
+//            frame.addEdge(new Edge(frame.getPoint(in.nextInt()),frame.getPoint(in.nextInt())));
         }
 
-        frame.init(n);
+        frame.init(n, edges);
 
         frame.repaint();
     }

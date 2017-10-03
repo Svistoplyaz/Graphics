@@ -14,6 +14,6 @@ public class Point {
         mat[0] = _x;
         mat[1] = _y;
         mat[2] = _z;
-        mat[3] = 100;
+        mat[3] = 1;
     }
 }
