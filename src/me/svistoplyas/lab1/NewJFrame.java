@@ -24,13 +24,6 @@ public class NewJFrame extends JFrame{
 
     Holst holst;
 
-    JButton xl;
-    JButton xr;
-    JButton yl;
-    JButton yr;
-    JButton zl;
-    JButton zr;
-
     ArrayList<Point> startPoints = new ArrayList<>();
 //    ArrayList<Edge> startEdges = new ArrayList<>();
 
