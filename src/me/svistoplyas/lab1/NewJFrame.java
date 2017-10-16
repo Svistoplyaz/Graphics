@@ -25,7 +25,6 @@ public class NewJFrame extends JFrame{
     Holst holst;
 
     ArrayList<Point> startPoints = new ArrayList<>();
-//    ArrayList<Edge> startEdges = new ArrayList<>();
 
     NewJFrame(){
         this.setLocation(20,20);
@@ -108,12 +107,6 @@ public class NewJFrame extends JFrame{
 
             }
         });
-//        this.add(xl = new JButton("Поворот против часовой вокруг Х"));
-//        this.add(xr = new JButton("Поворот по часовой вокруг Х"));
-//        this.add(yl = new JButton("Поворот против часовой вокруг Y"));
-//        this.add(yr = new JButton("Поворот по часовой вокруг Y"));
-//        this.add(zl = new JButton("Поворот против часовой вокруг Z"));
-//        this.add(zr = new JButton("Поворот по часовой вокруг Z"));
     }
 
     void init(int len, int[][] edges){

@@ -24,7 +24,6 @@ public class Main {
         for(int i = 0; i < m; i++){
             edges[i][0] = in.nextInt();
             edges[i][1] = in.nextInt();
-//            frame.addEdge(new Edge(frame.getPoint(in.nextInt()),frame.getPoint(in.nextInt())));
         }
 
         frame.init(n, edges);
