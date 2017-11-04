@@ -28,9 +28,13 @@ public class Frame extends JFrame{
             public void keyPressed(KeyEvent e) {
                 int code = e.getKeyCode();
                 if(code == KeyEvent.VK_A){
-                    increaseContrast();
+                    pnt.addBrightnessFilter(5);
                 }else if(code == KeyEvent.VK_D){
-                    decreaseContrast();
+                    pnt.addBrightnessFilter(-5);
+                }else if(code == KeyEvent.VK_Q){
+                    pnt.addContrastFilter(5);
+                }else if(code == KeyEvent.VK_E){
+                    pnt.addContrastFilter(-5);
                 }else if(code == KeyEvent.VK_S){
                     pnt.dropCoordinates();
                 }
@@ -51,14 +55,6 @@ public class Frame extends JFrame{
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
-    }
-
-    private void increaseContrast(){
-        pnt.correction += 5;
-    }
-
-    private void decreaseContrast(){
-        pnt.correction -= 5;
     }
 
     private void paint(){
