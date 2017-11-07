@@ -1,4 +1,4 @@
-package me.svistoplyas.lab5;
+package me.svistoplyas.lab56;
 
 /**
  * Created by Alexander on 10.10.2017.
