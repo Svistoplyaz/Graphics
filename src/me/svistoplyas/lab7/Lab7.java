@@ -1,7 +1,5 @@
 package me.svistoplyas.lab7;
 
-import com.sun.javafx.tk.PlatformImage;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -18,24 +16,21 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Task13_1 implements ActionListener {
+public class Lab7 implements ActionListener {
 	
 	private static int zoomRadius = 20;
-	
-	private static ActionListener listener = new Task13_1();
+
 	private static ImagePanel panel;
 	private static JTextField size;
 	private static JTextField area;
-	private static boolean useColor = true;
 	
 	public static void main(String[] args) throws Exception {
-		JFrame frame = new JFrame("lab13_java_1");
+		JFrame frame = new JFrame("Scaling");
 		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.LINE_AXIS));
 		
 		panel = new ImagePanel();
@@ -45,29 +40,7 @@ public class Task13_1 implements ActionListener {
 		controls.setLayout(new BoxLayout(controls, BoxLayout.PAGE_AXIS));
 		frame.add(controls);
 		frame.add(Box.createRigidArea(new Dimension(0, 30)));
-		
-//		JButton color = new JButton("Цветное изображение");
-//		Dimension d=new Dimension(191,25);
-//		color.setPreferredSize( d);
-//		color.setMinimumSize( d);
-//		color.setMaximumSize( d);
-//		color.addActionListener(listener);
-//		color.setActionCommand("color");
-//		controls.add(color);
-//		controls.add(Box.createRigidArea(new Dimension(0, 30)));
-//
-//		JButton black = new JButton("Черно-белое изображение");
-//		black.addActionListener(listener);
-//		black.setActionCommand("black");
-//		controls.add(black);
-//		controls.add(Box.createRigidArea(new Dimension(0, 30)));
-		
-//		JButton level = new JButton("Выровнять по гистограмме");
-//		level.addActionListener(listener);
-//		level.setActionCommand("level");
-//		controls.add(level);
-//		controls.add(Box.createRigidArea(new Dimension(0, 30)));
-		
+
 		size = new JTextField("4");
 		setFixedSize(size, 45, 27);
 		controls.add(size);
@@ -90,49 +63,74 @@ public class Task13_1 implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()) {
-			case "color": useColor = true; panel.repaint(); break;
-			case "black": useColor = false; panel.repaint(); break;
-//			case "level": panel.setHistogram(); panel.repaint(); break;
+			case "color": panel.repaint(); break;
+			case "figures": panel.repaint(); break;
 		}
 	}
 	
 	@SuppressWarnings("serial")
 	private static class ImagePanel extends JPanel {
 		
-		private BufferedImage color, black;
+		private BufferedImage color, figures;
 		private BufferedImage part = null, neighbor, interpolation, histogram = null;
 		
 		public ImagePanel() throws Exception {
 			this.setPreferredSize(new Dimension(650, 268 * 2));
 			this.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
 			
-			color = ImageIO.read(new File("resources/color.jpg"));
-			black = ImageIO.read(new File("resources/black.jpg"));
+			color = ImageIO.read(new File("resources/kitten.jpg"));
+			figures = ImageIO.read(new File("resources/figures.jpg"));
 			
 			this.addMouseListener(new MouseAdapter(){
 				@Override
 				public void mousePressed(MouseEvent e) {
-					if(e.getX() >= color.getWidth() || e.getY() >= color.getHeight()) return;
+					if(e.getX() <= color.getWidth() && e.getY() <= color.getHeight()) {
+						zoomRadius = 20;
+						try {
+							zoomRadius = Integer.parseInt(area.getText());
+						} catch (Exception ex) {
+						}
 
-                    zoomRadius = 20;
-                    try {
-                        zoomRadius = Integer.parseInt(area.getText());
-                    } catch(Exception ex) { }
+						int x = normalize(zoomRadius, e.getX(), color.getWidth() - zoomRadius);
+						int y = normalize(zoomRadius, e.getY(), color.getHeight() - zoomRadius);
 
-					int x = normalize(zoomRadius, e.getX(), color.getWidth() - zoomRadius);
-					int y = normalize(zoomRadius, e.getY(), color.getHeight() - zoomRadius);
-					
-					BufferedImage source = useColor ? color : black;
-					part = source.getSubimage(x - zoomRadius, y - zoomRadius, zoomRadius * 2 + 1, zoomRadius * 2 + 1);
-					
-					int k = 4;
-					try {
-						k = Integer.parseInt(size.getText());
-					} catch(Exception ex) { }
-					
-					neighbor = zoomNeighborInterpolation(part, k);
-					interpolation = zoomBilinearInterpolation(part, k);
-					panel.repaint();
+						BufferedImage source = color;
+						part = source.getSubimage(x - zoomRadius, y - zoomRadius, zoomRadius * 2 + 1, zoomRadius * 2 + 1);
+
+						int k = 4;
+						try {
+							k = Integer.parseInt(size.getText());
+						} catch (Exception ex) {
+						}
+
+						neighbor = zoomNeighborInterpolation(part, k);
+						interpolation = zoomBilinearInterpolation(part, k);
+						panel.repaint();
+					}else if(e.getX() <= color.getWidth() && e.getY()<=color.getHeight()*2){
+						zoomRadius = 20;
+						try {
+							zoomRadius = Integer.parseInt(area.getText());
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+
+						int x = normalize(zoomRadius, e.getX(), color.getWidth() - zoomRadius);
+						int y = normalize(zoomRadius, e.getY()-color.getHeight(), color.getHeight() - zoomRadius);
+
+						BufferedImage source = figures;
+						part = source.getSubimage(x - zoomRadius, y - zoomRadius, zoomRadius * 2 + 1, zoomRadius * 2 + 1);
+
+						int k = 4;
+						try {
+							k = Integer.parseInt(size.getText());
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+
+						neighbor = zoomNeighborInterpolation(part, k);
+						interpolation = zoomBilinearInterpolation(part, k);
+						panel.repaint();
+					}
 				}
 			});
 		}
@@ -143,7 +141,7 @@ public class Task13_1 implements ActionListener {
             g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
             g.setColor(Color.BLACK);
-            g.drawImage(useColor ? color : black, 0, 0, null);
+            g.drawImage(color, 0, 0, null);
             g.drawLine(color.getWidth(), 0, color.getWidth(), this.getHeight());
 
             if (part != null) {
@@ -153,7 +151,7 @@ public class Task13_1 implements ActionListener {
                 g.drawImage(interpolation, l, part.getHeight() + neighbor.getHeight() + 30, null);
             }
 
-            if (histogram != null) g.drawImage(histogram, 0, color.getHeight(), null);
+            g.drawImage(figures, 0, color.getHeight(), null);
         }
 	}
 	
